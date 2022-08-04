@@ -1,0 +1,1 @@
+main.py --verbose --model-dir=experiments/base_model train --train-data-dir=data/train --eval-data-dir=data/benchmark/kodak --num-parallel-calls=4 --batchsize=4 --epochs=1000 --save-summary-steps=10 --random-seed=230 --allow-growth=False --xla=False --save-profiling-steps=0 --log-verbosity=INFO

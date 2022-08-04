@@ -1,0 +1,99 @@
+// Training command
+
+python main.py --verbose --model-dir="experiments/base_model/generator" train \
+    --train-data-dir="data/train" \
+    --eval-data-dir="data/benchmark/kodak" \
+    --num-parallel-calls=4 \
+    --batchsize=4 \
+    --epochs=1000 \
+    --save-summary-steps=10 \
+    --random-seed=230 \
+    --allow-growth=True \
+    --xla=False \
+    --save-profiling-steps=0 \
+    --log-verbosity="INFO"
+
+python main.py --verbose --model-dir="experiments/base_model/generator" compress overfit.png
+
+// benchmarking
+
+python main.py --verbose --model-dir="experiments/base_model/generator" benchmark \
+    --allow-growth=False
+
+
+Look at the results folder for running configs for below experiments
+_____________________________________________________________________________________________
+
+--> Layer Modifications.
+/// base model
+    J. Ballé, D. Minnen, S. Singh, S.J. Hwang, N. Johnston:
+    "Variational Image Compression with a Scale Hyperprior"
+    Int. Conf. on Learning Representations (ICLR), 2018
+    https://arxiv.org/abs/1802.01436
+
+/// mod1
+    Contains the modifications to architecture from the paper
+    J. Ballé, D. Minnen, S. Singh, S.J. Hwang, N. Johnston:
+    "Variational Image Compression with a Scale Hyperprior"
+    Int. Conf. on Learning Representations (ICLR), 2018
+    https://arxiv.org/abs/1802.01436
+
+    Modifications :
+        1. Mobile-Bottleneck Residual Convolutional Layer (EfficientNet)
+
+/// mod2
+    Contains the modifications to architecture from the paper
+    J. Ballé, D. Minnen, S. Singh, S.J. Hwang, N. Johnston:
+    "Variational Image Compression with a Scale Hyperprior"
+    Int. Conf. on Learning Representations (ICLR), 2018
+    https://arxiv.org/abs/1802.01436
+
+    Modifications :
+        1. Mobile-Bottleneck Residual Convolutional Layer (EfficientNet)
+        2. EfficientV1 like architecture for downsampling and its inverse for upsampling using SignalConv Blocks for down/up-sampling and GDN/IGDN for activations.
+
+/// mod3
+    Contains the modifications to architecture from the paper
+    J. Ballé, D. Minnen, S. Singh, S.J. Hwang, N. Johnston:
+    "Variational Image Compression with a Scale Hyperprior"
+    Int. Conf. on Learning Representations (ICLR), 2018
+    https://arxiv.org/abs/1802.01436
+
+    Modifications :
+        1. Mobile-Bottleneck Residual Convolutional Layer (EfficientNet)
+        2. EfficientV1 like architecture for downsampling and its inverse for upsampling using basic using basic Conv-Batch-Relu layers
+        for downsampling and ICNR_Subpixel-Batch-Relu for upsampling.
+
+/// mod4
+    same as mod3 but no efficient-net architecture.
+
+--> Compression Modifications.
+
+//// variant1
+    same as mod3, but uses only scale based hyperprior, similar to
+    "Variational Image Compression with a Scale Hyperprior"
+    Int. Conf. on Learning Representations (ICLR), 2018
+    https://arxiv.org/abs/1802.01436
+
+//// base (this is the basic generator transform)
+    Contains the base architecture from the paper
+    David Minnen, Johannes Ballé, George Toderici:
+    "Joint Autoregressive and Hierarchical Priors for Learned Image Compression"
+    https://arxiv.org/abs/1809.02736v1
+
+//// variant2
+    same as base, but uses both mean and scale based hyperprior, but no autoregressive prior in hierarchy.
+
+//// variant3
+    same as base, but uses both mean and scale based hyperprior, and uses a fast variant of pixelCNN++ autoregressive prior in hierarchy.
+
+//// variant3_old
+    old version of variant3 using simple basic pixelCNN from OpenAI.
+
+//// variant4
+    same as variant3, but transforms are modified to architecture similar to
+    XiangJi Wu1, Ziwen Zhang1, Jie Feng1, Lei Zhou1, Junmin Wu1
+    "End-to-end Optimized Video Compression with MV-Residual Prediction"
+    https://openaccess.thecvf.com/content_CVPRW_2020/papers/w7/Wu_End-to-End_Optimized_Video_Compression_With_MV-Residual_Prediction_CVPRW_2020_paper.pdf
+
+    with added Non-Local Block, Non-Local Attention Feature Extraction Module (NLAM), Mish & GDN combo activations, Subpixel upsampling (ICNR init)
